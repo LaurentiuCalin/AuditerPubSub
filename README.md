@@ -23,3 +23,9 @@ curl -X 'POST' \
   "email": {email}
 }'
 ```
+
+# Demo
+
+
+https://user-images.githubusercontent.com/17986810/214096479-830c4e6a-6b7d-4de3-b62a-23ef616d85f9.mp4
+
