@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+
+  worker:
+    container_name: Consumer
+    restart: always
+    build:
+      context: .
+      dockerfile: AuditingSubWorker/Dockerfile
+    environment:
+      - RabbitMQ__Hostname=rabbitmq
+    depends_on:
+      - rabbitmq
+
+  client:
+    container_name: Publisher
+    restart: always
+    build:
+      context: .
+      dockerfile: AuditingPubApi/Dockerfile
+    environment:
+      - RabbitMQ__Hostname=rabbitmq
+    depends_on:
+      - rabbitmq
+    ports:
+      - "5003:80"
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:latest
+    hostname: rabbitmq
+    ports:
+      - "15672:15672" 
+      - "5672:5672"  
+  
+
+
+
