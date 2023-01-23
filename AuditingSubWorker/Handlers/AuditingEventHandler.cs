@@ -1,5 +1,8 @@
-﻿using Contracts;
+﻿using System;
+using System.Threading.Tasks;
+using Contracts;
 using MessageBus.Interfaces;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace AuditingSubWorker.Handlers;

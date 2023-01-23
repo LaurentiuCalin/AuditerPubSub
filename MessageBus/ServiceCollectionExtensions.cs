@@ -1,75 +1,77 @@
-﻿using MessageBus.Interfaces;
+﻿using System;
+using MessageBus.Interfaces;
 using MessageBus.RabbitMq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using RabbitMQ.Client;
 
-namespace MessageBus;
-
-public static class ServiceCollectionExtensions
+namespace MessageBus
 {
-    public static IServiceCollection RegisterRabbitMqEventPublisher(this IServiceCollection services, Action<RabbitMqOptions> rabbitMqConfiguration)
+    public static class ServiceCollectionExtensions
     {
-        var rabbitMqOptions = new RabbitMqOptions();
-        rabbitMqConfiguration(rabbitMqOptions);
-        var factory = GetFactory(rabbitMqOptions);
-
-        services.AddSingleton<IEventPublisher>(provider =>
+        public static IServiceCollection RegisterRabbitMqEventPublisher(this IServiceCollection services, Action<RabbitMqOptions> rabbitMqConfiguration)
         {
-            var connection = factory.CreateConnection();
-            var channel = connection.CreateModel();
+            var rabbitMqOptions = new RabbitMqOptions();
+            rabbitMqConfiguration(rabbitMqOptions);
+            var factory = GetFactory(rabbitMqOptions);
 
-            return new RabbitMqEventPublisher(
-                connection,
-                channel,
-                provider.GetLogger<RabbitMqEventPublisher>(),
-                rabbitMqOptions.QueueName);
-        });
+            services.AddSingleton<IEventPublisher>(provider =>
+            {
+                var connection = factory.CreateConnection();
+                var channel = connection.CreateModel();
 
-        return services;
-    }
+                return new RabbitMqEventPublisher(
+                    connection,
+                    channel,
+                    provider.GetLogger<RabbitMqEventPublisher>(),
+                    rabbitMqOptions.QueueName);
+            });
 
-    public static IServiceCollection RegisterRabbitMqEventConsumer(this IServiceCollection services, Action<RabbitMqOptions> rabbitMqConfiguration)
-    {
-        var rabbitMqOptions = new RabbitMqOptions();
-        rabbitMqConfiguration(rabbitMqOptions);
-        var factory = GetFactory(rabbitMqOptions);
+            return services;
+        }
 
-        services.AddSingleton<IEventConsumer>(provider =>
+        public static IServiceCollection RegisterRabbitMqEventConsumer(this IServiceCollection services, Action<RabbitMqOptions> rabbitMqConfiguration)
         {
-            var scopedServiceFactory = provider.GetRequiredService<IServiceScopeFactory>();
-            var connection = factory.CreateConnection();
-            var channel = connection.CreateModel();
+            var rabbitMqOptions = new RabbitMqOptions();
+            rabbitMqConfiguration(rabbitMqOptions);
+            var factory = GetFactory(rabbitMqOptions);
 
-            return new RabbitMqEventConsumer(
-                rabbitMqOptions.QueueName,
-                channel,
-                provider.GetLogger<RabbitMqEventConsumer>(),
-                scopedServiceFactory
-            );
-        });
+            services.AddSingleton<IEventConsumer>(provider =>
+            {
+                var scopedServiceFactory = provider.GetRequiredService<IServiceScopeFactory>();
+                var connection = factory.CreateConnection();
+                var channel = connection.CreateModel();
 
-        return services;
-    }
+                return new RabbitMqEventConsumer(
+                    rabbitMqOptions.QueueName,
+                    channel,
+                    provider.GetLogger<RabbitMqEventConsumer>(),
+                    scopedServiceFactory
+                );
+            });
 
-    private static ConnectionFactory GetFactory(RabbitMqOptions options)
-    {
-        return new ConnectionFactory
+            return services;
+        }
+
+        private static ConnectionFactory GetFactory(RabbitMqOptions options)
         {
-            HostName = options.Hostname,
-            Port = options.Port,
-            UserName = options.Username,
-            Password = options.Password,
-            DispatchConsumersAsync = true,
-        };
-    }
+            return new ConnectionFactory
+            {
+                HostName = options.Hostname,
+                Port = options.Port,
+                UserName = options.Username,
+                Password = options.Password,
+                DispatchConsumersAsync = true,
+            };
+        }
 
-    private static ILogger<T> GetLogger<T>(this IServiceProvider provider)
-    {
-        var loggerFactory = provider.GetService<ILoggerFactory>();
-        return loggerFactory is not null
-            ? loggerFactory.CreateLogger<T>()
-            : NullLogger<T>.Instance;
+        private static ILogger<T> GetLogger<T>(this IServiceProvider provider)
+        {
+            var loggerFactory = provider.GetService<ILoggerFactory>();
+            return loggerFactory != null
+                ? loggerFactory.CreateLogger<T>()
+                : NullLogger<T>.Instance;
+        }
     }
 }

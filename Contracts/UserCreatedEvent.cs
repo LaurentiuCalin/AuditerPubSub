@@ -1,4 +1,5 @@
-﻿using MessageBus.Interfaces;
+﻿using System;
+using MessageBus.Interfaces;
 
 namespace Contracts;
 

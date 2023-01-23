@@ -1,6 +1,9 @@
-﻿namespace MessageBus.Interfaces;
+﻿using System.Threading.Tasks;
 
-public interface IEventHandler<in TEvent> where TEvent : IEvent
+namespace MessageBus.Interfaces
 {
-    Task Handle(TEvent userCreatedEvent);
+    public interface IEventHandler<in TEvent> where TEvent : IEvent
+    {
+        Task Handle(TEvent @event);
+    }
 }

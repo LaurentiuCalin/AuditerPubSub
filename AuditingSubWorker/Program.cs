@@ -3,6 +3,9 @@ using AuditingSubWorker.Handlers;
 using Contracts;
 using MessageBus;
 using MessageBus.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")

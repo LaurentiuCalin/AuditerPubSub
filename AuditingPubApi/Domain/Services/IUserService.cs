@@ -1,4 +1,5 @@
-﻿using AuditingPubApi.Domain.Models;
+﻿using System.Threading.Tasks;
+using AuditingPubApi.Domain.Models;
 using AuditingPubApi.Requests;
 
 namespace AuditingPubApi.Domain.Services;

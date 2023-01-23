@@ -1,10 +1,7 @@
-﻿namespace MessageBus.Interfaces;
-
-public interface IEventPublisher
+﻿namespace MessageBus.Interfaces
 {
-    /// <summary>
-    /// Publish event
-    /// </summary>
-    /// <param name="event">Event to be submitted to registered queue</param>
-    void PublishEvent(IEvent @event);
+    public interface IEventPublisher
+    {
+        void PublishEvent(IEvent @event);
+    }
 }

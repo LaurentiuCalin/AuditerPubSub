@@ -1,4 +1,5 @@
-﻿using AuditingPubApi.Domain.Exceptions;
+﻿using System.Threading.Tasks;
+using AuditingPubApi.Domain.Exceptions;
 using AuditingPubApi.Domain.Models;
 using AuditingPubApi.Domain.Services;
 using AuditingPubApi.Requests;

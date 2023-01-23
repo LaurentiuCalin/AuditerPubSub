@@ -1,4 +1,6 @@
-﻿namespace AuditingPubApi.Domain.Exceptions;
+﻿using System;
+
+namespace AuditingPubApi.Domain.Exceptions;
 
 public class ValidationException : Exception
 {

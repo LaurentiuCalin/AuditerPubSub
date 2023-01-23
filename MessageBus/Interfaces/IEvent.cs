@@ -1,6 +1,9 @@
-﻿namespace MessageBus.Interfaces;
+﻿using System;
 
-public interface IEvent
+namespace MessageBus.Interfaces
 {
-    public DateTime OccuredAt { get; }
+    public interface IEvent
+    {
+        public DateTime OccuredAt { get; }
+    }
 }
